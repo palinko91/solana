@@ -43,24 +43,15 @@ impl<T> OptionSerializer<T> {
     }
 
     pub fn is_some(&self) -> bool {
-        match self {
-            OptionSerializer::Some(_) => true,
-            _ => false,
-        }
+        matches!(*self, OptionSerializer::Some(_))
     }
 
     pub fn is_none(&self) -> bool {
-        match self {
-            OptionSerializer::None => true,
-            _ => false,
-        }
+        matches!(*self, OptionSerializer::None)
     }
 
     pub fn is_skip(&self) -> bool {
-        match self {
-            OptionSerializer::Skip => true,
-            _ => false,
-        }
+        matches!(*self, OptionSerializer::Skip)
     }
 
     pub fn expect(self, msg: &str) -> T {
@@ -68,15 +59,19 @@ impl<T> OptionSerializer<T> {
             OptionSerializer::Some(val) => val,
             _ => panic!("{}", msg),
         }
-    } 
+    }
 
     pub fn unwrap(self) -> T {
         match self {
             OptionSerializer::Some(val) => val,
-            OptionSerializer::None => panic!("called `OptionSerializer::unwrap()` on a `None` value"),
-            OptionSerializer::Skip => panic!("called `OptionSerializer::unwrap()` on a `Skip` value"),
+            OptionSerializer::None => {
+                panic!("called `OptionSerializer::unwrap()` on a `None` value")
+            }
+            OptionSerializer::Skip => {
+                panic!("called `OptionSerializer::unwrap()` on a `Skip` value")
+            }
         }
-    } 
+    }
 
     pub fn unwrap_or(self, default: T) -> T {
         match self {
